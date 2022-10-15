@@ -11,5 +11,6 @@ export const OUT_EVENT = {
   OPPONENT_PLAYED: 'opponent_played',
   OPPONENT_JOINED: 'opponent_joined',
   OPPONENT_LEFT: 'opponent_left',
-  START_GAME: 'start_game'
+  START_GAME: 'start_game',
+  NEXT_TURN: 'next_turn'
 }

@@ -2,11 +2,6 @@ export interface IPlayerInit {
   user: string;
   room?: string;
 }
-
-export interface IGameStart {
-  room: string;
-}
-
 export interface IPlayerSocketInfo {
   socketId: string;
   user: string;
@@ -17,5 +12,6 @@ export interface IPlayerSocketInfo {
 export interface IRoomInfo {
   room: string;
   players: Array<IPlayerSocketInfo>;
-  gameStarted: boolean; 
+  gameStarted: boolean;
+  turn?: string[];
 }
