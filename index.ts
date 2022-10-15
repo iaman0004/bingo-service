@@ -1,9 +1,8 @@
 import express, { Express, Request, Response } from 'express';
-import { Server } from 'socket.io';
 import { createServer } from 'http';
-import { Socket } from 'socket.io/dist/socket';
 import cors from 'cors';
-import { IN_EVENT} from './constants/event-constants';
+import { Server } from 'socket.io';
+import { IRoomInfo } from 'interfaces';
 
 const PORT: number = 9090;
 
@@ -22,15 +21,15 @@ app.use(cors({
   maxAge: 36000
 }))
 
-app.use(require('./routes/auth-route'));
-require('./routes/auth-events')(io);
-require('./routes/bingo-events')(io);
+
+export const _rooms: Map<string, IRoomInfo> = new Map();
+
+require('./routes/auth-events')(io, _rooms);
+require('./routes/bingo-events')(io, _rooms);
 
 app.get('/', (_req: Request, res: Response) => {
-  console.log('x');
   res.status(200).send({
-    app: 'Socket.io',
-    status: 'Fine'
+    app: 'Working fine...!'
   });
 });
 

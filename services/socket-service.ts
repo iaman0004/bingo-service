@@ -1,7 +1,8 @@
 export const generateRoomId = (rooms: Map<string, Set<string>>) => {
-  const codes: Array<number> = [];
+  let codes: Array<number> = [];
   let flag: boolean = true;
   while (flag) {
+    codes = [];
     for (let i = 0; i<8; i++) {
       const flag = Math.floor(Math.random()%10);
       if (flag % 3 === 0) {
