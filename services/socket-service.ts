@@ -4,7 +4,7 @@ export const generateRoomId = (rooms: Map<string, Set<string>>) => {
   while (flag) {
     for (let i = 0; i<8; i++) {
       const flag = Math.floor(Math.random()%10);
-      if (flag%2 === 0) {
+      if (flag % 3 === 0) {
         const char = Math.floor(Math.random()*(90 - 65 + 1)) + 65;
         codes.push(char);
       }
