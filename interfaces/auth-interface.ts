@@ -3,10 +3,15 @@ export interface IPlayerInit {
   room?: string;
 }
 
+export interface IGameStart {
+  room: string;
+}
+
 export interface IPlayerSocketInfo {
   socketId: string;
   user: string;
   room: string;
+  leader: boolean;
 }
 
 export interface IRoomInfo {

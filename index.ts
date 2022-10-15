@@ -23,31 +23,8 @@ app.use(cors({
 }))
 
 app.use(require('./routes/auth-route'));
-require('./routes/auth-evnents')(io);
+require('./routes/auth-events')(io);
 require('./routes/bingo-events')(io);
-
-io.on('connection', (socket: Socket) => {
-  console.log(socket.id);
-
-  socket.on('disconnect', (evt) => {``
-    console.log(evt);
-  })
-
-  // socket.on(IN_EVENT.JOIN_ROOM, (roomName: string) => {
-  //   console.log(roomName);
-  //   socket.join(roomName);
-  //   console.log(socket.rooms);
-  // });
-
-  socket.on('client_to_server_message', (evt: any) => {
-    socket.rooms.forEach((_room: string) => {
-      if (_room !== socket.id) {
-        console.log(evt);
-        socket.to(_room).emit('server_to_client_message', evt);
-      }
-    })
-  })
-})
 
 app.get('/', (_req: Request, res: Response) => {
   console.log('x');
