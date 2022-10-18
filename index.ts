@@ -4,7 +4,7 @@ import cors from 'cors';
 import { Server } from 'socket.io';
 import { IRoomInfo } from 'interfaces';
 
-const PORT: number = 9090;
+const PORT = process.env.PORT || 9090;
 
 const app: Express = express();
 const httpServer = createServer(app);
