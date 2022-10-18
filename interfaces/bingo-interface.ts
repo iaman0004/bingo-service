@@ -9,4 +9,5 @@ export interface IGameStart {
 export interface IOpponentPlayed {
   room: string;
   played: number | string;
+  won?: string;
 }

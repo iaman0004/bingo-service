@@ -118,17 +118,24 @@ module.exports = function(io: any, roomsCreated: Map<string, IRoomInfo>) {
     /**
      * Socket Disconnect handling
      */
-    // TODO: Handle Disconnect
     socket.on('disconnect', _evt => {
-      let room: string;
-      for (const _room of socket.rooms) {
-        if (_room != socket.id) {
-          room = _room;
-          console.log(room);
-          // break;
+      console.log(socket.rooms);
+      for (const room of socket.rooms) {
+        if (room != socket.id) {
+          const roomInfo = roomsCreated.get(room);
+          if (roomInfo) {
+            const updatedPlayersList = roomInfo.players.filter(player => player.socketId != socket.id);
+            roomInfo.players = updatedPlayersList;
+            socket.broadcast.to(room).emit(OUT_EVENT.OPPONENT_LEFT);
+
+            if (roomInfo.players.length) {
+              roomsCreated.set(room, roomInfo);
+            } else {
+              roomsCreated.delete(room);
+            }
+          }
         }
       }
-
     })
   });
 }

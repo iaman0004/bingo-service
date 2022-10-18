@@ -29,17 +29,15 @@ module.exports = function(io: any, roomsCreated: Map<string, IRoomInfo>) {
     socket.on(IN_EVENT.PLAYED, (evt: IOpponentPlayed) => {
       const nextTurnRoom = roomsCreated.get(evt.room);
 
-      console.log(evt);
-
       const played: ISentEvent = {
         type: 'success',
         data: {
-          play: evt.played
+          play: evt.played,
+          won: evt.won
         }
       };
 
       if (nextTurnRoom?.turn) {
-        
         const nextTurn = defineNextTurn(nextTurnRoom.turn);
         io.to(nextTurn.willplay).emit(OUT_EVENT.OPPONENT_PLAYED, played);
         io.to(nextTurn.willplay).emit(OUT_EVENT.NEXT_TURN);
@@ -48,5 +46,37 @@ module.exports = function(io: any, roomsCreated: Map<string, IRoomInfo>) {
         roomsCreated.set(evt.room, nextTurnRoom);
       }
     })
+
+    /**
+     * One player completes send event to other to determine if they complete or not
+     * if other player also completes with last 
+     */
+    socket.on(IN_EVENT.GAME_WON, (evt: IGameStart) => {
+      if (!evt.room) {
+        return;
+      }
+      socket.broadcast.to(evt.room).emit(OUT_EVENT.OPPONENT_WON);
+    });
+
+    /**
+     * Ah! we need to start another game
+     */
+    socket.on(IN_EVENT.ANOTHER_GAME, (evt: IGameStart) => {
+      if (!evt.room) {
+        return;
+      }
+      
+      socket.broadcast.to(evt.room).emit(OUT_EVENT.ANOTHER_GAME);
+      const nextTurnRoom = roomsCreated.get(evt.room);
+
+      if (nextTurnRoom?.turn) {
+        const nextTurn = defineNextTurn(nextTurnRoom.turn);
+        io.to(nextTurn.willplay).emit(OUT_EVENT.NEXT_TURN);
+
+        nextTurnRoom.turn = nextTurn.players;
+        roomsCreated.set(evt.room, nextTurnRoom);
+      }
+
+    });
   });
 }
