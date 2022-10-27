@@ -7,7 +7,7 @@ module.exports = function(io: any, roomsCreated: Map<string, IRoomInfo>) {
   io.on('connection', (socket: Socket) => {
     
     socket.on(IN_EVENT.JOIN_ROOM, (evt: IPlayerInit) => {
-      console.log({evt});
+      console.log(`Connected: ${socket.id}`);
       /**
        * When rooom exists
        */
@@ -119,7 +119,7 @@ module.exports = function(io: any, roomsCreated: Map<string, IRoomInfo>) {
      * Socket Disconnect handling
      */
     socket.on('disconnect', _evt => {
-      console.log(socket.rooms);
+      console.log(`Disconnected: ${socket.id}`);
       for (const room of socket.rooms) {
         if (room != socket.id) {
           const roomInfo = roomsCreated.get(room);
@@ -132,6 +132,7 @@ module.exports = function(io: any, roomsCreated: Map<string, IRoomInfo>) {
               roomsCreated.set(room, roomInfo);
             } else {
               roomsCreated.delete(room);
+              console.log(`Deleted Room: ${room}`);
             }
           }
         }
